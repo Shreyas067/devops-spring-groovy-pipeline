@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "mvn"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git url: 'https://github.com/Shreyas067/devops-spring-groovy-pipeline.git'
+
+                // Run Maven on a Unix agent.
+                script{
+                if(isUnix()){
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+				}	
+                else{
+                 bat "mvn -Dmaven.test.failure.ignore=true clean package"
+                 }
+                 }
+            }
+            }
+            
+           
+           
+         stage('Integration Test') {
+            steps {
+               
+                // Run Maven on a Unix agent.
+                script{
+                if(isUnix()){
+                sh "mvn -Dmaven.test.failure.ignore=true clean verify"
+				}	
+                else{
+                 bat "mvn -Dmaven.test.failure.ignore=true clean verify"
+                 }
+                 }
+            }
+        
+    	}
+    }
+     post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    jacoco(
+                    execPattern: '**/target/jacoco/*.exec',
+                    classPattern: '**/target/classes/com/myapp',
+                    sourcePattern: '**/src/main'
+                    
+                    )
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                    
+                }
+            }
+            
+        
+}
