@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-groovy-app
+  labels:
+    app: devops-groovy-app
+spec:
+
+  selector:
+    matchLabels:
+      app: devops-groovy-app
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+
+
+  template:
+    metadata:
+      labels:
+        app: devops-groovy-app
+    spec:
+      containers:
+      - name: devops-groovy-app
+        image: devops-groovy-app
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - containerPort: 8888

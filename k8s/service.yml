@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-groovy-app-service
+spec:
+  selector:
+    app: devops-groovy-app
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 8888
+    targetPort: 8888
+    // target port is your container port , this is where your application is running.

@@ -42,6 +42,73 @@ pipeline {
         
     	}
     	
+    	//building an image without a dockerfile.
+    	
+    	
+    	stage('Build Docker Image') {
+steps {
+
+// Run Maven on a Unix agent.
+script{
+if(isUnix()){
+sh "mvn -Dmaven.test.failure.ignore=true spring-boot:build-image"
+               }    
+else{
+bat "mvn -Dmaven.test.failure.ignore=true spring-boot:build-image"
+}
+}
+}
+
+   }
+   
+   stage('Load Docker Image') {
+steps {
+
+// Run Maven on a Unix agent.
+script{
+if(isUnix()){
+sh "minikube image load devops-groovy-app"
+               }    
+else{
+bat "minikube image load devops-groovy-app"
+}
+}
+}
+
+   }
+   
+   stage('Kubernetes Deploy') {
+steps {
+
+// Run Maven on a Unix agent.
+script{
+if(isUnix()){
+sh "kubectl apply -f k8s/deployment.yml"
+               }    
+else{
+bat "kubectl apply -f k8s/deployment.yml"
+}
+}
+}
+
+   }
+   
+   stage('Kubernetes Service') {
+steps {
+
+// Run Maven on a Unix agent.
+script{
+if(isUnix()){
+sh "kubectl apply -f k8s/service.yml"
+               }    
+else{
+bat "kubectl apply -f k8s/service.yml"
+}
+}
+}
+
+   }
+    	
     	stage('SonarQubeStaticAnalysis') {
 steps {
 

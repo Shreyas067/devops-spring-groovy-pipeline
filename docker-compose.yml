@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  groovy-app:
+   build: .
+   image: shreyasnrao/devops-groovy-app-spring
+   volumes:
+   - app-data:/var/bin
+   ports:
+   - 5000:8888 
+volumes:
+ app-data:
+  
